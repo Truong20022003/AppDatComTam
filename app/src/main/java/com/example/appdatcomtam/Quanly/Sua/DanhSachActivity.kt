@@ -191,7 +191,7 @@ fun ItemDanhSachMonAn(id: Int, gia: Double, tenMonAn: String, imageUri: Int?) {
                 contentDescription = "edit"
             )
         }
-        IconButton(onClick = { /*TODO*/ }) {
+        IconButton(onClick = { }) {
             Icon(
                 painter = painterResource(id = R.drawable.deleteimages),
                 modifier = Modifier.size(20.dp),
