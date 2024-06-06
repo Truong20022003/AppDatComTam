@@ -34,8 +34,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.appdatcomtam.Quanly.Sua.DanhSachActivity
 import com.example.appdatcomtam.Quanly.Sua.DanhSachScreen
-import com.example.appdatcomtam.Quanly.Sua.SuaMonAn
-import com.example.appdatcomtam.Quanly.Them.ThemMonAn
+import com.example.appdatcomtam.Quanly.Sua.SuaMonAnActivity
+import com.example.appdatcomtam.Quanly.Them.ThemMonAnActivity
 import com.example.appdatcomtam.R
 
 
@@ -102,7 +102,7 @@ fun showQuanLyMonAnScreen() {
     Column {
         NutBam(
             text = "Thêm món ăn",
-            OnclickItem = { context.startActivity(Intent(context, ThemMonAn::class.java)) })
+            OnclickItem = { context.startActivity(Intent(context, ThemMonAnActivity::class.java)) })
         NutBam(
             text = "Sửa món ăn",
             OnclickItem = { context.startActivity(Intent(context, DanhSachActivity()::class.java)) })
