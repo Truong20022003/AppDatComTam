@@ -91,6 +91,7 @@ fun ThemMonAnScreen(viewModel: ThemMonAnViewModel) {
 @Composable
 fun showThemMonAnScreen(viewModel: ThemMonAnViewModel) {
     val context = LocalContext.current
+
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -198,7 +199,6 @@ fun showThemMonAnScreen(viewModel: ThemMonAnViewModel) {
     }
 }
 
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComboBoxExample(
@@ -262,12 +262,13 @@ fun ComboBoxExample(
             ) {
                 options.forEach { selectionOption ->
                     DropdownMenuItem(
-                        text = { Text(selectionOption.tenLoaiMonAn) },
                         onClick = {
                             selectedText = selectionOption.tenLoaiMonAn
+                            viewModel.selectedOptionText = selectionOption.tenLoaiMonAn
                             onOptionSelected(selectionOption.tenLoaiMonAn)
                             expanded = false
-                        }
+                        },
+                        text = { Text(selectionOption.tenLoaiMonAn) }
                     )
                 }
             }

@@ -75,4 +75,6 @@ dependencies {
     implementation("io.coil-kt:coil-compose:2.4.0")
     ////mô hình MVVM
     implementation("androidx.compose.runtime:runtime-livedata:1.6.0")
+    implementation ("androidx.room:room-ktx:2.6.1")
+
 }

@@ -4,22 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.appdatcomtam.Interface.ChiTietDonHangDao
-import com.example.appdatcomtam.Interface.DonHangDao
-import com.example.appdatcomtam.Interface.GioHangDao
-import com.example.appdatcomtam.Interface.LoaiMonAnDao
-import com.example.appdatcomtam.Interface.MonAnDao
-import com.example.appdatcomtam.Interface.UserDao
-import com.example.appdatcomtam.Model.ChiTietDonHang
-import com.example.appdatcomtam.Model.DonHang
-import com.example.appdatcomtam.Model.GioHang
-import com.example.appdatcomtam.Model.LoaiMonAn
-import com.example.appdatcomtam.Model.MonAn
-import com.example.appdatcomtam.Model.User
+import com.example.appdatcomtam.Interface.*
+import com.example.appdatcomtam.Model.*
 
-@Database(entities = [LoaiMonAn::class, MonAn::class, User::class, GioHang::class, DonHang::class, ChiTietDonHang::class], version = 1)
+@Database(
+    entities = [LoaiMonAn::class, MonAn::class, User::class, GioHang::class, DonHang::class, ChiTietDonHang::class],
+    version = 1,
+    exportSchema = false
+)
 abstract class DbHelper : RoomDatabase() {
+
     abstract fun loaiMonAnDao(): LoaiMonAnDao
     abstract fun monAnDao(): MonAnDao
     abstract fun userDao(): UserDao
@@ -28,23 +22,19 @@ abstract class DbHelper : RoomDatabase() {
     abstract fun chiTietDonHangDao(): ChiTietDonHangDao
 
     companion object {
-        @Volatile private var instance: DbHelper? = null
+        @Volatile
+        private var INSTANCE: DbHelper? = null
 
-        fun getDatabase(context: Context): DbHelper =
-            instance ?: synchronized(this) {
-                instance ?: buildDatabase(context).also { instance = it }
+        fun getInstance(context: Context): DbHelper {
+            return INSTANCE ?: synchronized(this) {
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    DbHelper::class.java,
+                    "comtam_database"
+                ).build()
+                INSTANCE = instance
+                instance
             }
-//        private fun buildDatabase(context: Context) =
-//            Room.databaseBuilder(context.applicationContext, DbHelper::class.java, "comtam_database")
-//                .addCallback(object : RoomDatabase.Callback() {
-//                    override fun onCreate(db: SupportSQLiteDatabase) {
-//                        super.onCreate(db)
-//                        DatabaseInitializer.populateDatabase(getDatabase(context))
-//                    }
-//                })
-//                .build()
-        private fun buildDatabase(context: Context) =
-            Room.databaseBuilder(context.applicationContext, DbHelper::class.java, "comtam_database")
-                .build()
+        }
     }
 }
