@@ -23,7 +23,7 @@
             android:name=".Quanly.Them.ThemMonAnActivity"
             android:exported="false" />
         <activity
-            android:name=".Quanly.QuanLyMonAn"
+            android:name=".MainActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.AppDatComTam">

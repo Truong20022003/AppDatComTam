@@ -37,7 +37,7 @@ fun MyBottombar(navCtrl: NavController? = null) {
     Scaffold(
         bottomBar = {
             BottomAppBar(
-                containerColor = Color.White,
+                containerColor = Color.Black,
                 modifier = Modifier
                     .height(100.dp)
             ) {
