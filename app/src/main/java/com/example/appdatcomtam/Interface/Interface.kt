@@ -1,118 +1,119 @@
 package com.example.appdatcomtam.Interface
 
 import androidx.room.*
-import com.example.appdatcomtam.Model.ChiTietDonHang
-import com.example.appdatcomtam.Model.DonHang
-import com.example.appdatcomtam.Model.GioHang
-import com.example.appdatcomtam.Model.LoaiMonAn
-import com.example.appdatcomtam.Model.MonAn
-import com.example.appdatcomtam.Model.User
+import com.example.appdatcomtam.Model.*
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface LoaiMonAnDao {
-    @Query("SELECT * FROM LoaiMonAn")
-    fun getAll(): List<LoaiMonAn>
-
-    @Query("SELECT * FROM LoaiMonAn WHERE id = :id")
-    fun getById(id: Int): LoaiMonAn
 
     @Insert
-    fun insert(loaiMonAn: LoaiMonAn)
+    suspend fun insert(loaiMonAn: LoaiMonAn)
+
+    @Query("SELECT * FROM LoaiMonAn")
+    fun getAll(): Flow<List<LoaiMonAn>>
+
+    @Query("SELECT * FROM LoaiMonAn WHERE id = :id")
+    fun getById(id: Int): Flow<LoaiMonAn>
 
     @Update
-    fun update(loaiMonAn: LoaiMonAn)
+    suspend fun update(loaiMonAn: LoaiMonAn)
 
     @Delete
-    fun delete(loaiMonAn: LoaiMonAn)
+    suspend fun delete(loaiMonAn: LoaiMonAn)
 }
 
 @Dao
 interface MonAnDao {
-    @Query("SELECT * FROM MonAn")
-    fun getAll(): List<MonAn>
-
-    @Query("SELECT * FROM MonAn WHERE id = :id")
-    fun getById(id: Int): MonAn
 
     @Insert
-    fun insert(monAn: MonAn)
+    suspend fun insert(monAn: MonAn)
+
+    @Query("SELECT * FROM MonAn")
+    fun getAll(): Flow<List<MonAn>>
+
+    @Query("SELECT * FROM MonAn WHERE id = :id")
+    fun getById(id: Int): Flow<MonAn>
 
     @Update
-    fun update(monAn: MonAn)
+    suspend fun update(monAn: MonAn)
 
     @Delete
-    fun delete(monAn: MonAn)
+    suspend fun delete(monAn: MonAn)
 }
 
 @Dao
 interface UserDao {
-    @Query("SELECT * FROM User")
-    fun getAll(): List<User>
-
-    @Query("SELECT * FROM User WHERE id = :id")
-    fun getById(id: Int): User
 
     @Insert
-    fun insert(user: User)
+    suspend fun insert(user: User)
+
+    @Query("SELECT * FROM User")
+    fun getAll(): Flow<List<User>>
+
+    @Query("SELECT * FROM User WHERE id = :id")
+    fun getById(id: Int): Flow<User>
 
     @Update
-    fun update(user: User)
+    suspend fun update(user: User)
 
     @Delete
-    fun delete(user: User)
+    suspend fun delete(user: User)
 }
 
 @Dao
 interface GioHangDao {
-    @Query("SELECT * FROM GioHang")
-    fun getAll(): List<GioHang>
-
-    @Query("SELECT * FROM GioHang WHERE id = :id")
-    fun getById(id: Int): GioHang
 
     @Insert
-    fun insert(gioHang: GioHang)
+    suspend fun insert(gioHang: GioHang)
+
+    @Query("SELECT * FROM GioHang")
+    fun getAll(): Flow<List<GioHang>>
+
+    @Query("SELECT * FROM GioHang WHERE id = :id")
+    fun getById(id: Int): Flow<GioHang>
 
     @Update
-    fun update(gioHang: GioHang)
+    suspend fun update(gioHang: GioHang)
 
     @Delete
-    fun delete(gioHang: GioHang)
+    suspend fun delete(gioHang: GioHang)
 }
 
 @Dao
 interface DonHangDao {
-    @Query("SELECT * FROM DonHang")
-    fun getAll(): List<DonHang>
-
-    @Query("SELECT * FROM DonHang WHERE id = :id")
-    fun getById(id: Int): DonHang
 
     @Insert
-    fun insert(donHang: DonHang)
+    suspend fun insert(donHang: DonHang)
+
+    @Query("SELECT * FROM DonHang")
+    fun getAll(): Flow<List<DonHang>>
+
+    @Query("SELECT * FROM DonHang WHERE id = :id")
+    fun getById(id: Int): Flow<DonHang>
 
     @Update
-    fun update(donHang: DonHang)
+    suspend fun update(donHang: DonHang)
 
     @Delete
-    fun delete(donHang: DonHang)
+    suspend fun delete(donHang: DonHang)
 }
 
 @Dao
 interface ChiTietDonHangDao {
-    @Query("SELECT * FROM ChiTietDonHang")
-    fun getAll(): List<ChiTietDonHang>
-
-    @Query("SELECT * FROM ChiTietDonHang WHERE id = :id")
-    fun getById(id: Int): ChiTietDonHang
 
     @Insert
-    fun insert(chiTietDonHang: ChiTietDonHang)
+    suspend fun insert(chiTietDonHang: ChiTietDonHang)
+
+    @Query("SELECT * FROM ChiTietDonHang")
+    fun getAll(): Flow<List<ChiTietDonHang>>
+
+    @Query("SELECT * FROM ChiTietDonHang WHERE id = :id")
+    fun getById(id: Int): Flow<ChiTietDonHang>
 
     @Update
-    fun update(chiTietDonHang: ChiTietDonHang)
+    suspend fun update(chiTietDonHang: ChiTietDonHang)
 
     @Delete
-    fun delete(chiTietDonHang: ChiTietDonHang)
+    suspend fun delete(chiTietDonHang: ChiTietDonHang)
 }
-

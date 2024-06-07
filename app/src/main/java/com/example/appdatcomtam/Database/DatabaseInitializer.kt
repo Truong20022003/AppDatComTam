@@ -17,18 +17,18 @@ class DatabaseInitializer {
             val donHangDao = database.donHangDao()
             val chiTietDonHangDao = database.chiTietDonHangDao()
 
-            CoroutineScope(Dispatchers.IO).launch {
-                loaiMonAnDao.insert(LoaiMonAn(0, "Nước uống"))
-                loaiMonAnDao.insert(LoaiMonAn(1, "Món chính"))
-
-                monAnDao.insert(MonAn(0, 1, 10000.0, "Coca Cola"))
-                monAnDao.insert(MonAn(1, 2, 50000.0, "Phở bò"))
-
-                userDao.insert(User(0, "user1", "password1", "Address 1"))
-                userDao.insert(User(1, "user2", "password2", "Address 2"))
-
-
-            }
+//            CoroutineScope(Dispatchers.IO).launch {
+//                loaiMonAnDao.insert(LoaiMonAn(0, "Nước uống"))
+//                loaiMonAnDao.insert(LoaiMonAn(1, "Món chính"))
+//
+//                monAnDao.insert(MonAn(0, 1, 10000.0, "Coca Cola"))
+//                monAnDao.insert(MonAn(1, 2, 50000.0, "Phở bò"))
+//
+//                userDao.insert(User(0, "user1", "password1", "Address 1"))
+//                userDao.insert(User(1, "user2", "password2", "Address 2"))
+//
+//
+//            }
         }
     }
 }

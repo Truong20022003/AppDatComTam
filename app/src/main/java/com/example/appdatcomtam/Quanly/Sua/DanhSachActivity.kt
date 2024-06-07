@@ -1,10 +1,10 @@
 package com.example.appdatcomtam.Quanly.Sua
 
-
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -27,6 +27,8 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -39,22 +41,22 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.appdatcomtam.Quanly.MonAn
 import com.example.appdatcomtam.R
 
 class DanhSachActivity : ComponentActivity() {
+    private val viewModel: DanhSachViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            DanhSachScreen()
+            DanhSachScreen(viewModel)
         }
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DanhSachScreen() {
+fun DanhSachScreen(viewModel: DanhSachViewModel) {
     val context = LocalContext.current
     Scaffold(
         topBar = {
@@ -110,34 +112,30 @@ fun DanhSachScreen() {
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-//                showSuaMonAnScreen(viewModel)
-                showDanhSachMonAn()
+                showDanhSachMonAn(viewModel)
             }
         }
     )
 }
 
 @Composable
-fun showDanhSachMonAn() {
-    val monan = listOf(
-        MonAn(1, 20.0, "Suon", imageUri = R.drawable.logoimages),
-        MonAn(2, 20.0, "Suon", imageUri = R.drawable.logoimages),
-        MonAn(3, 20.0, "Suon", imageUri = R.drawable.logoimages)
-    )
+fun showDanhSachMonAn(viewModel: DanhSachViewModel) {
+    val monAnList by viewModel.monAnList.collectAsState()
+
     LazyColumn {
-        items(monan) { ds ->
+        items(monAnList) { ds ->
             ItemDanhSachMonAn(
                 id = ds.id,
                 gia = ds.gia,
                 tenMonAn = ds.tenMonAn,
-                imageUri = ds.imageUri
+                onDelete = { viewModel.deleteMonAn(ds) }
             )
         }
     }
 }
 
 @Composable
-fun ItemDanhSachMonAn(id: Int, gia: Double, tenMonAn: String, imageUri: Int?) {
+fun ItemDanhSachMonAn(id: Int, gia: Double, tenMonAn: String?, onDelete: () -> Unit) {
     val context = LocalContext.current
     Row(
         modifier = Modifier
@@ -156,24 +154,19 @@ fun ItemDanhSachMonAn(id: Int, gia: Double, tenMonAn: String, imageUri: Int?) {
             color = Color.White,
             fontFamily = FontFamily(Font(R.font.cairo_bold))
         )
-        imageUri?.let {
-            Image(
-                painter = painterResource(id = it),
-                contentDescription = null,
-                modifier = Modifier.size(40.dp)
-            )
-        }
         Column(
             Modifier
                 .fillMaxHeight()
         ) {
-            Text(
-                text = tenMonAn,
-                textAlign = TextAlign.Start,
-                fontSize = 17.sp,
-                color = Color.White,
-                fontFamily = FontFamily(Font(R.font.cairo_bold))
-            )
+            tenMonAn?.let {
+                Text(
+                    text = it,
+                    textAlign = TextAlign.Start,
+                    fontSize = 17.sp,
+                    color = Color.White,
+                    fontFamily = FontFamily(Font(R.font.cairo_bold))
+                )
+            }
             Text(
                 text = gia.toString(),
                 textAlign = TextAlign.Start,
@@ -191,7 +184,7 @@ fun ItemDanhSachMonAn(id: Int, gia: Double, tenMonAn: String, imageUri: Int?) {
                 contentDescription = "edit"
             )
         }
-        IconButton(onClick = { }) {
+        IconButton(onClick = onDelete) {
             Icon(
                 painter = painterResource(id = R.drawable.deleteimages),
                 modifier = Modifier.size(20.dp),
