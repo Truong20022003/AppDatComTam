@@ -28,19 +28,19 @@ private fun ChonChucNang(navCtrl: NavController? = null){
             .fillMaxWidth()
     ) {
 
-        Button(onClick = { navCtrl?.navigate("add_food_type") }) {
+        Button(onClick = { navCtrl?.navigate("AddCategory") }) {
             Image(painter = painterResource(R.drawable.logoimages),
                 contentDescription = null,
                 modifier = Modifier.size(20.dp))
             Text("Thêm loại món ăn")
         }
-        Button(onClick = { navCtrl?.navigate("edit_food_type") }) {
+        Button(onClick = { navCtrl?.navigate("EditCategory") }) {
             Image(painter = painterResource(R.drawable.logoimages),
                 contentDescription = null,
                 modifier = Modifier.size(20.dp))
             Text("Sửa loại món ăn")
         }
-        Button(onClick = { navCtrl?.navigate("delete_food_type") }) {
+        Button(onClick = { navCtrl?.navigate("DeleteCategory") }) {
             Image(painter = painterResource(R.drawable.logoimages),
                 contentDescription = null,
                 modifier = Modifier.size(20.dp))

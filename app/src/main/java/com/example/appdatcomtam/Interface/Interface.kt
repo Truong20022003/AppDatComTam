@@ -53,7 +53,8 @@ interface UserDao {
 
     @Query("SELECT * FROM User WHERE id = :id")
     fun getById(id: Int): Flow<User>
-
+//    @Query("SELECT * FROM User WHERE id = :id")
+//    fun getByUserNamePassword(id: Int): Flow<User>
     @Update
     suspend fun update(user: User)
 
