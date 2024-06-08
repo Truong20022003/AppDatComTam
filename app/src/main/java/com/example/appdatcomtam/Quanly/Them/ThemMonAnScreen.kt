@@ -28,7 +28,6 @@ import com.example.appdatcomtam.R
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThemMonAnScreen(viewModel: ThemMonAnViewModel) {
-    val context = LocalContext.current
     Scaffold(
         topBar = {
             TopAppBar(
@@ -37,7 +36,9 @@ fun ThemMonAnScreen(viewModel: ThemMonAnViewModel) {
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        IconButton(onClick = { if (context is ThemMonAnActivity) context.finish() }) {
+                        IconButton(onClick = {
+//                            if (context is ThemMonAnActivity) context.finish()
+                        }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.back),
                                 modifier = Modifier.size(20.dp),

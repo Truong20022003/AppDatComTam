@@ -1,10 +1,6 @@
 package com.example.appdatcomtam.Quanly.Sua
 
-import android.content.Intent
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.activity.viewModels
+import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -41,23 +37,24 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.appdatcomtam.Navigation.Screen
 import com.example.appdatcomtam.R
 
-class DanhSachActivity : ComponentActivity() {
-    private val viewModel: DanhSachViewModel by viewModels()
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            DanhSachScreen(viewModel)
-        }
-    }
-}
+//class DanhSachActivity : ComponentActivity() {
+//    private val viewModel: DanhSachViewModel by viewModels()
+//
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            DanhSachScreen(viewModel)
+//        }
+//    }
+//}
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun DanhSachScreen(viewModel: DanhSachViewModel) {
-    val context = LocalContext.current
+fun DanhSachScreen(viewModel: DanhSachViewModel, navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -66,9 +63,7 @@ fun DanhSachScreen(viewModel: DanhSachViewModel) {
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically
                     ) {
-                        IconButton(onClick = {
-                            if (context is DanhSachActivity) context.finish()
-                        }) {
+                        IconButton(onClick = { navController.popBackStack() }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.back),
                                 modifier = Modifier.size(25.dp),
@@ -112,30 +107,46 @@ fun DanhSachScreen(viewModel: DanhSachViewModel) {
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                showDanhSachMonAn(viewModel)
+                showDanhSachMonAn(viewModel, navController)
             }
         }
     )
 }
 
 @Composable
-fun showDanhSachMonAn(viewModel: DanhSachViewModel) {
+fun showDanhSachMonAn(viewModel: DanhSachViewModel, navController: NavController) {
     val monAnList by viewModel.monAnList.collectAsState()
-
     LazyColumn {
         items(monAnList) { ds ->
             ItemDanhSachMonAn(
                 id = ds.id,
                 gia = ds.gia,
                 tenMonAn = ds.tenMonAn,
-                onDelete = { viewModel.deleteMonAn(ds) }
+                onDelete = { viewModel.deleteMonAn(ds) },
+                onEdit = {
+                    navController.navigate(
+                        Screen.SuaMonAn.route + "/${Uri.encode(ds.id.toString())}" + "/${
+                            Uri.encode(
+                                ds.tenMonAn
+                            )
+                        }" + "/${Uri.encode(ds.gia.toString())}"
+                        + "/${Uri.encode(ds.hinhAnh)}"
+                    )
+                }, navController
             )
         }
     }
 }
 
 @Composable
-fun ItemDanhSachMonAn(id: Int, gia: Double, tenMonAn: String?, onDelete: () -> Unit) {
+fun ItemDanhSachMonAn(
+    id: Int,
+    gia: Double,
+    tenMonAn: String?,
+    onDelete: () -> Unit,
+    onEdit: () -> Unit,
+    navController: NavController
+) {
     val context = LocalContext.current
     Row(
         modifier = Modifier
@@ -176,7 +187,7 @@ fun ItemDanhSachMonAn(id: Int, gia: Double, tenMonAn: String?, onDelete: () -> U
                 fontFamily = FontFamily(Font(R.font.cairo_bold))
             )
         }
-        IconButton(onClick = { context.startActivity(Intent(context, SuaMonAnActivity::class.java)) }) {
+        IconButton(onClick = onEdit) {
             Icon(
                 painter = painterResource(id = R.drawable.editimages),
                 modifier = Modifier.size(20.dp),

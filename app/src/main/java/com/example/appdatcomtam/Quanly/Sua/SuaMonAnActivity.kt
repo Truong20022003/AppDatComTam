@@ -10,17 +10,17 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 
 
-class SuaMonAnActivity : ComponentActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContent {
-            CompositionLocalProvider(LocalViewModelStoreOwner provides this) {
-                val viewModelSua: SuaMonAnViewModel = viewModel()
-                SuaMonAnScreen(viewModelSua)
-            }
-        }
-    }
-}
+//class SuaMonAnActivity : ComponentActivity() {
+//    override fun onCreate(savedInstanceState: Bundle?) {
+//        super.onCreate(savedInstanceState)
+//        setContent {
+//            CompositionLocalProvider(LocalViewModelStoreOwner provides this) {
+//                val viewModelSua: SuaMonAnViewModel = viewModel()
+//                SuaMonAnScreen(viewModelSua)
+//            }
+//        }
+//    }
+//}
 
 
 

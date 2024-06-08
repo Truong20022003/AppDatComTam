@@ -27,9 +27,9 @@ class ThemMonAnViewModel : ViewModel() {
         } else {
             try {
                 val giaValue = gia.toDouble()
-                Log.d("ThemMonAn", "Loại món: $selectedOptionText, Giá: $gia, Tên món ăn: $tenMonAn")
+                Log.d("ThemMonAn", "Loại món: $selectedOptionText, Giá: $gia, Tên món ăn: $tenMonAn,anh: $imageUri")
 
-                val monAn = MonAn(idLoaiMonAn = selectedOptionText, gia = giaValue, tenMonAn = tenMonAn)
+                val monAn = MonAn(idLoaiMonAn = selectedOptionText, gia = giaValue, tenMonAn = tenMonAn, hinhAnh = imageUri.toString())
 
                 // Thêm món ăn vào cơ sở dữ liệu trong coroutine
                 viewModelScope.launch(Dispatchers.IO) {
