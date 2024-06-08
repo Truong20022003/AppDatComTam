@@ -26,6 +26,7 @@ data class MonAn(
     @ColumnInfo(name = "idLoaiMonAn") var idLoaiMonAn: String?,
     @ColumnInfo(name = "gia") var gia: Double ,
     @ColumnInfo(name = "tenMonAn") var tenMonAn: String?,
+    @ColumnInfo(name = "hinhAnh") var hinhAnh: String?,
     )
 //@Entity
 //data class MonAn(

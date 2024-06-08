@@ -1,8 +1,6 @@
 package com.example.appdatcomtam.Navigation
 
 
-
-import android.provider.ContactsContract.Profile
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -18,13 +16,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.appdatcomtam.Category.CategoryManager
-import com.example.appdatcomtam.Home.Home
+import com.example.appdatcomtam.Home.HomeScreen
 import com.example.appdatcomtam.Quanly.QuanLyMonAnScreen
+import com.example.appdatcomtam.Quanly.Sua.DanhSachScreen
+import com.example.appdatcomtam.Quanly.Sua.DanhSachViewModel
+import com.example.appdatcomtam.Quanly.Sua.SuaMonAnScreen
+import com.example.appdatcomtam.Quanly.Sua.SuaMonAnViewModel
+import com.example.appdatcomtam.Quanly.Them.ThemMonAnScreen
+import com.example.appdatcomtam.Quanly.Them.ThemMonAnViewModel
 import com.example.appdatcomtam.R
 
 
@@ -119,22 +124,41 @@ fun MyBottombar(navCtrl: NavController? = null) {
             }
         }
     ) {
+        val viewModelThemMonAn: ThemMonAnViewModel = viewModel()
+        val viewModelDanhSachMonAn: DanhSachViewModel = viewModel()
+        val viewModelSuaMonAn: SuaMonAnViewModel = viewModel()
         NavHost(
             navController = navController,
             startDestination = Screen.Home.route,
             modifier = Modifier.padding(it)
         ) {
             composable(Screen.Home.route) {
-                Home()
+                HomeScreen()
             }
             composable(Screen.Thongke.route) {
                 CategoryManager(navCtrl)
             }
             composable(Screen.Notification.route) {
-                QuanLyMonAnScreen()
+                QuanLyMonAnScreen(navController)
             }
             composable(Screen.Profile.route) {
                 com.example.appdatcomtam.Home.Profile()
+            }
+            composable(Screen.ThemMonAn.route) { ThemMonAnScreen(viewModel = viewModelThemMonAn) }
+            composable(Screen.DanhSachMonAn.route) {
+                DanhSachScreen(viewModel = viewModelDanhSachMonAn, navController = navController)
+            }
+//            composable(Screen.SuaMonAn.route) { SuaMonAnScreen(viewModel = viewModelSuaMonAn) }
+
+            composable("${Screen.SuaMonAn.route}/{id}/{tenMonAn}/{gia}/{hinhAnh}") {
+                SuaMonAnScreen(
+                    viewModel = viewModelSuaMonAn,
+                    id = it.arguments?.getString("id").toString(),
+                    tenMonAn = it.arguments?.getString("tenMonAn").toString(),
+                    gia = it.arguments?.getString("gia").toString(),
+                    hinhAnh = it.arguments?.getString("hinhAnh").toString()
+                    ,navController = navController
+                )
             }
         }
     }

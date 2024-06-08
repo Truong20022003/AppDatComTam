@@ -11,5 +11,8 @@ enum class Screen(val route: String) {
     History("ProductDetail"),
     Cart("Cart"),
     Thongke("Thongke"),
-    Manager("Manager")
+    Manager("Manager"),
+    ThemMonAn("ThemMonAn"),
+    SuaMonAn("SuaMonAn"),
+    DanhSachMonAn("DanhSachMonAn"),
 }
