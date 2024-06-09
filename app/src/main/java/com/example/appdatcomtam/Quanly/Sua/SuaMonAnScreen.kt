@@ -1,7 +1,6 @@
 package com.example.appdatcomtam.Quanly.Sua
 
 import android.net.Uri
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -30,14 +29,11 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -47,8 +43,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.appdatcomtam.Model.MonAn
+import com.example.appdatcomtam.Quanly.copyUriToInternalStorage
 import com.example.appdatcomtam.R
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -57,17 +53,13 @@ fun SuaMonAnScreen(
     viewModel: SuaMonAnViewModel,
     navController: NavController,
     id: String?,
+    idLoaiMonAn: String,
     tenMonAn: String,
     gia: String,
-    hinhAnh: String
+    hinhAnh: String,
 ) {
-    var idstate by remember { mutableStateOf(id) }
-    var tenMonAnstate by remember { mutableStateOf(tenMonAn) }
-    var giastate by remember { mutableStateOf(gia) }
-    var hinhAnhstate by remember { mutableStateOf(hinhAnh) }
-
     LaunchedEffect(Unit) {
-        Log.d("SuaMonAnScreen", "ID: $idstate, TenMonAn: $tenMonAnstate, Gia: $giastate, HinhAnh: $hinhAnhstate")
+        viewModel.initialize(id, idLoaiMonAn, tenMonAn, gia, hinhAnh)
     }
 
     Scaffold(
@@ -108,7 +100,11 @@ fun SuaMonAnScreen(
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = Color(0xFF252121)
                 ),
-                modifier = Modifier.shadow(10.dp, RoundedCornerShape(10.dp), spotColor = Color.Black)
+                modifier = Modifier.shadow(
+                    10.dp,
+                    RoundedCornerShape(10.dp),
+                    spotColor = Color.Black
+                )
             )
         },
         content = { innerPadding ->
@@ -118,7 +114,7 @@ fun SuaMonAnScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                showSuaMonAnScreen(viewModel,navController, idstate, tenMonAnstate, giastate, hinhAnhstate)
+                showSuaMonAnScreen(viewModel, navController)
             }
         }
     )
@@ -128,21 +124,15 @@ fun SuaMonAnScreen(
 @Composable
 fun showSuaMonAnScreen(
     viewModel: SuaMonAnViewModel,
-    navController: NavController,
-    id: String?,
-    tenMonAn: String,
-    gia: String,
-    hinhAnh: String
+    navController: NavController
 ) {
-    Log.d("SuaMonAnScreen222", "ID: $id, TenMonAn: $tenMonAn, Gia: $gia, HinhAnh: $hinhAnh")
-
     val context = LocalContext.current
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
-            viewModel.imageUri = it
-            viewModel.hinhAnh = it.toString() // Update the image URI as a string
+            val newImagePath = copyUriToInternalStorage(context, it)
+            viewModel.hinhAnh = newImagePath // Update the image path
         }
     }
 
@@ -153,14 +143,19 @@ fun showSuaMonAnScreen(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         val painter = rememberAsyncImagePainter(
-            model = viewModel.imageUri ?: Uri.parse(hinhAnh)
+            model = viewModel.hinhAnh.takeIf { it.isNotEmpty() }///sử lý nếu null
         )
-
         Image(
             painter = painter,
             contentDescription = "selected_image",
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(200.dp)
+                .shadow(
+                    10.dp,
+                    RoundedCornerShape(10.dp),
+                    spotColor = Color.White
+                )
                 .clickable { imagePickerLauncher.launch("image/*") }
         )
 
@@ -177,10 +172,8 @@ fun showSuaMonAnScreen(
                 modifier = Modifier.padding(start = 8.dp)
             )
             OutlinedTextField(
-                value = tenMonAn,
-                onValueChange = { newValue ->viewModel.tenMonAn = newValue  },
-
-
+                value = viewModel.tenMonAn,
+                onValueChange = { viewModel.tenMonAn = it },
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.White, shape = RoundedCornerShape(10.dp)),
@@ -206,8 +199,8 @@ fun showSuaMonAnScreen(
                 modifier = Modifier.padding(start = 8.dp)
             )
             TextField(
-                value = gia,
-                onValueChange = { newValue -> viewModel.gia = newValue     },
+                value = viewModel.gia,
+                onValueChange = { newValue -> viewModel.gia = newValue },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(50.dp),
@@ -217,14 +210,15 @@ fun showSuaMonAnScreen(
 
         Button(
             onClick = {
-                val datanew = MonAn( id = id!!.toInt(),
-                    idLoaiMonAn = null,
-                    tenMonAn = tenMonAn,
-                    gia = gia.toDouble(),
-                    hinhAnh = hinhAnh
+                val datanew = MonAn(
+                    id = viewModel.id.toInt(),
+                    idLoaiMonAn = viewModel.idLoaiMonAn,
+                    tenMonAn = viewModel.tenMonAn,
+                    gia = viewModel.gia.toDouble(),
+                    hinhAnh = viewModel.hinhAnh
                 )
                 viewModel.onClickUpdate(context, datanew)
-                navController.popBackStack()
+                if (viewModel.check) navController.popBackStack()
             },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
