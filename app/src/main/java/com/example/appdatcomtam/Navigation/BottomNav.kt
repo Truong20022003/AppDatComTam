@@ -144,16 +144,17 @@ fun MyBottombar(navCtrl: NavController? = null) {
             composable(Screen.Profile.route) {
                 com.example.appdatcomtam.Home.Profile()
             }
-            composable(Screen.ThemMonAn.route) { ThemMonAnScreen(viewModel = viewModelThemMonAn) }
+            composable(Screen.ThemMonAn.route) { ThemMonAnScreen(viewModel = viewModelThemMonAn,navController = navController) }
             composable(Screen.DanhSachMonAn.route) {
                 DanhSachScreen(viewModel = viewModelDanhSachMonAn, navController = navController)
             }
 //            composable(Screen.SuaMonAn.route) { SuaMonAnScreen(viewModel = viewModelSuaMonAn) }
 
-            composable("${Screen.SuaMonAn.route}/{id}/{tenMonAn}/{gia}/{hinhAnh}") {
+            composable("${Screen.SuaMonAn.route}/{id}/{idLoaiMonAn}/{tenMonAn}/{gia}/{hinhAnh}") {
                 SuaMonAnScreen(
                     viewModel = viewModelSuaMonAn,
                     id = it.arguments?.getString("id").toString(),
+                    idLoaiMonAn = it.arguments?.getString("idLoaiMonAn").toString(),
                     tenMonAn = it.arguments?.getString("tenMonAn").toString(),
                     gia = it.arguments?.getString("gia").toString(),
                     hinhAnh = it.arguments?.getString("hinhAnh").toString()

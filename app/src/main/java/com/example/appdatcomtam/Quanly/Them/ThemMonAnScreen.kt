@@ -6,14 +6,42 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.ExposedDropdownMenuDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
@@ -21,13 +49,15 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.appdatcomtam.Quanly.LoaiMonAn
+import com.example.appdatcomtam.Quanly.copyUriToInternalStorage
 import com.example.appdatcomtam.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ThemMonAnScreen(viewModel: ThemMonAnViewModel) {
+fun ThemMonAnScreen(viewModel: ThemMonAnViewModel, navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
@@ -37,7 +67,10 @@ fun ThemMonAnScreen(viewModel: ThemMonAnViewModel) {
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         IconButton(onClick = {
-//                            if (context is ThemMonAnActivity) context.finish()
+                            navController.popBackStack()
+                            viewModel.imageUri = null
+                            viewModel.gia = ""
+                            viewModel.tenMonAn = ""
                         }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.back),
@@ -81,8 +114,9 @@ fun ThemMonAnScreen(viewModel: ThemMonAnViewModel) {
                     .background(Color(0xFF252121))
                     .fillMaxSize()
                     .padding(innerPadding)
+                    .verticalScroll(rememberScrollState())
             ) {
-                showThemMonAnScreen(viewModel)
+                showThemMonAnScreen(viewModel, navController)
             }
         }
     )
@@ -90,14 +124,14 @@ fun ThemMonAnScreen(viewModel: ThemMonAnViewModel) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun showThemMonAnScreen(viewModel: ThemMonAnViewModel) {
+fun showThemMonAnScreen(viewModel: ThemMonAnViewModel, navController: NavController) {
     val context = LocalContext.current
-
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
             viewModel.imageUri = it
+            viewModel.imagePath = copyUriToInternalStorage(context, it)
         }
     }
 
@@ -107,10 +141,11 @@ fun showThemMonAnScreen(viewModel: ThemMonAnViewModel) {
             .padding(20.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        viewModel.imageUri?.let {
+        viewModel.imagePath?.let {
             Image(
                 painter = rememberImagePainter(data = it),
                 contentDescription = "selected_image",
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(200.dp)
                     .clickable { imagePickerLauncher.launch("image/*") }
@@ -118,14 +153,16 @@ fun showThemMonAnScreen(viewModel: ThemMonAnViewModel) {
         } ?: Image(
             painter = painterResource(id = R.drawable.them_hinh_anh),
             contentDescription = "hinh_anh",
+            contentScale = ContentScale.Crop,
             modifier = Modifier
                 .size(200.dp)
                 .clickable { imagePickerLauncher.launch("image/*") }
         )
         ComboBoxExample(
             text = "Loại món",
-            onOptionSelected = { newSelectedOption ->
-                viewModel.selectedOptionText = newSelectedOption
+            onOptionSelected = { selectedOption ->
+                viewModel.selectedOptionText = selectedOption.tenLoaiMonAn
+                viewModel.idloai = selectedOption.id.toString()
             },
             viewModel = viewModel // Truyền viewModel vào
         )
@@ -186,7 +223,10 @@ fun showThemMonAnScreen(viewModel: ThemMonAnViewModel) {
             )
         }
         Button(
-            onClick = {  viewModel.onClickAdd(context) },
+            onClick = {
+                viewModel.onClickAdd(context)
+                if (viewModel.check) navController.popBackStack()
+            },
             modifier = Modifier
                 .align(Alignment.CenterHorizontally)
                 .width(200.dp)
@@ -204,20 +244,22 @@ fun showThemMonAnScreen(viewModel: ThemMonAnViewModel) {
 @Composable
 fun ComboBoxExample(
     text: String,
-    onOptionSelected: (String) -> Unit,
-    viewModel: ThemMonAnViewModel // Truyền viewModel vào
+    onOptionSelected: (LoaiMonAn) -> Unit,
+    viewModel: ThemMonAnViewModel
 ) {
     var expanded by remember { mutableStateOf(false) }
     val options = listOf(
-        LoaiMonAn("Sườn"),
-        LoaiMonAn("Bì cả"),
-        LoaiMonAn("Trứng chả"),
-        LoaiMonAn("Sườn chả")
+        LoaiMonAn(1, "Thịt bò"),
+        LoaiMonAn(2, "Bì cả"),
+        LoaiMonAn(3, "Trứng chả"),
+        LoaiMonAn(4, "Sườn chả")
     )
 
     // Thiết lập giá trị mặc định nếu chưa có giá trị nào được chọn
     if (viewModel.selectedOptionText.isEmpty()) {
-        viewModel.selectedOptionText = options.first().tenLoaiMonAn
+        val defaultOption = options.first()
+        viewModel.selectedOptionText = defaultOption.tenLoaiMonAn
+        viewModel.idloai = defaultOption.id.toString()
     }
 
     var selectedText by remember { mutableStateOf(viewModel.selectedOptionText) }
@@ -266,7 +308,8 @@ fun ComboBoxExample(
                         onClick = {
                             selectedText = selectionOption.tenLoaiMonAn
                             viewModel.selectedOptionText = selectionOption.tenLoaiMonAn
-                            onOptionSelected(selectionOption.tenLoaiMonAn)
+                            viewModel.idloai = selectionOption.id.toString()
+                            onOptionSelected(selectionOption)
                             expanded = false
                         },
                         text = { Text(selectionOption.tenLoaiMonAn) }
@@ -276,3 +319,4 @@ fun ComboBoxExample(
         }
     }
 }
+

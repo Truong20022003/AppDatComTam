@@ -82,7 +82,7 @@ fun showQuanLyMonAnScreen(navController: NavController) {
         NutBam(
             text = "Sửa món ăn",
             OnclickItem = { navController.navigate(Screen.DanhSachMonAn.route) })
-        NutBam(text = "Xóa món ăn", OnclickItem = {})
+//        NutBam(text = "Xóa món ăn", OnclickItem = {})
     }
 }
 
