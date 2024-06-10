@@ -1,4 +1,4 @@
-package com.example.appdatcomtam.Quanly.Sua
+package com.example.appdatcomtam.Quanly.MonAn.Sua
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.appdatcomtam.Model.MonAn
-import com.example.appdatcomtam.Quanly.copyUriToInternalStorage
+import com.example.appdatcomtam.Quanly.MonAn.copyUriToInternalStorage
 import com.example.appdatcomtam.R
 
 @OptIn(ExperimentalMaterial3Api::class)

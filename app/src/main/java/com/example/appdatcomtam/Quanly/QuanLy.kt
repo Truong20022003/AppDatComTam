@@ -1,4 +1,4 @@
-package com.example.appdatcomtam.Home
+package com.example.appdatcomtam.Quanly
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -17,27 +19,32 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
+import com.example.appdatcomtam.Navigation.Screen
+import com.example.appdatcomtam.Quanly.MonAn.NutBam
+import com.example.appdatcomtam.Quanly.MonAn.Sua.showDanhSachMonAn
 import com.example.appdatcomtam.R
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun Profile() {
+fun QuanLyScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
                         Image(
                             painter = painterResource(id = R.drawable.logoimages),
                             modifier = Modifier
@@ -49,6 +56,9 @@ fun Profile() {
                             "Cum tứm đim",
                             textAlign = TextAlign.Start,
                             fontSize = 18.sp,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(start = 8.dp),
                             color = Color.White,
                             fontFamily = FontFamily(Font(R.font.cairo_bold))
                         )
@@ -58,7 +68,8 @@ fun Profile() {
                     containerColor = Color(0xFF252121)
                 ),
                 modifier = Modifier.shadow(
-                    30.dp,
+                    10.dp,
+                    RoundedCornerShape(10.dp),
                     spotColor = Color.Black
                 ),
             )
@@ -66,54 +77,24 @@ fun Profile() {
         content = { innerPadding ->
             Column(
                 modifier = Modifier
-                    .padding(top = 10.dp)
                     .background(Color(0xFF252121))
                     .fillMaxSize()
                     .padding(innerPadding)
             ) {
-                showProfile()
+                showQuanLy( navController)
             }
         }
     )
 }
-
-private data class DataProfile(val img: Int, val text: String)
-
 @Composable
-fun showProfile() {
-    val dulieu = listOf(
-        DataProfile(R.drawable.zaloimages, "0947289641"),
-        DataProfile(R.drawable.gmailimages, "doandtph42307@fpt.edu.vn"),
-        DataProfile(R.drawable.phonesimages, "0936789241")
-    )
-    dulieu.forEach {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(20.dp), verticalAlignment = Alignment.CenterVertically
-        ) {
-            Image(
-                painter = painterResource(id = it.img),
-                contentDescription = "img",
-                contentScale = ContentScale.Crop,
-                modifier = Modifier
-                    .size(60.dp)
-                    .then(
-                        if (it.img == R.drawable.zaloimages) {
-                            Modifier.clip(RoundedCornerShape(24.dp))
-                        } else {
-                            Modifier
-                        }
-                    )
-            )
-            Text(
-                text = it.text,
-                fontSize = 20.sp,
-                modifier = Modifier.padding(start = 10.dp),
-                color = Color.White,
-                fontWeight = FontWeight.W400,
-                fontFamily = FontFamily(Font(R.font.cairo_regular))
-            )
-        }
+fun showQuanLy(navController: NavController){
+    Column {
+        NutBam(
+            text = "Quản lý loại món ăn",
+            OnclickItem = { navController.navigate(Screen.QuanLyLoaiMonAnScreen.route)})
+        NutBam(
+            text = "Quản lý món ăn",
+            OnclickItem = { navController.navigate(Screen.QuanLyMonAnScreen.route) })
+//        NutBam(text = "Xóa món ăn", OnclickItem = {})
     }
 }

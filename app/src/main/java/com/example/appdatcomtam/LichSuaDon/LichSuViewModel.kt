@@ -1,4 +1,6 @@
 package com.example.appdatcomtam.LichSuaDon
 
-class LichSuViewModel {
+import androidx.lifecycle.ViewModel
+
+class LichSuViewModel :ViewModel(){
 }
