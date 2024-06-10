@@ -1,51 +1,112 @@
 package com.example.appdatcomtam.Category
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import com.example.appdatcomtam.Navigation.Screen
 import com.example.appdatcomtam.R
 
-class CategoryManager {
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun QuanLyLoaiMonAnScreen(navController: NavController) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        "Cum tứm đim",
+                        textAlign = TextAlign.Start,
+                        fontSize = 18.sp,
+                        modifier = Modifier.fillMaxWidth(),
+                        color = Color.White,
+                        fontFamily = FontFamily(Font(R.font.cairo_bold))
+                    )
+                },
+                navigationIcon = {
+                    Image(
+                        painter = painterResource(id = R.drawable.logoimages),
+                        modifier = Modifier.size(60.dp),
+                        contentDescription = "logo"
+                    )
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF252121)
+                ),
+                modifier = Modifier.shadow(
+                    10.dp,
+                    RoundedCornerShape(10.dp),
+                    spotColor = Color.Black
+                ),
+            )
+        },
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .background(Color(0xFF252121))
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                showQuanLyLoaiMonAnScreen(navController)
+            }
+        }
+    )
+}
+
+@Composable
+fun showQuanLyLoaiMonAnScreen(navController: NavController) {
+    Column {
+        NutBam1(
+            text = "Thêm loại món ăn",
+            OnclickItem = { navController.navigate(Screen.AddLoaiMonAnScreen.route)})
+        NutBam1(
+            text = "Sửa loại món ăn",
+            OnclickItem = { navController.navigate(Screen.LoaiMonAnListScreen.route) })
+    }
+    NutBam1(
+        text = "Xóa loại món ăn",
+        OnclickItem = { navController.navigate(Screen.DeleteLoaiMonan.route) })
 
 }
 
-@Preview
 @Composable
-private fun ChonChucNang(navCtrl: NavController? = null){
-    Column(
-        modifier = Modifier
-            .padding(vertical = 10.dp, horizontal = 15.dp)
-            .fillMaxWidth()
-    ) {
-
-        Button(onClick = { navCtrl?.navigate("AddCategory") }) {
-            Image(painter = painterResource(R.drawable.logoimages),
-                contentDescription = null,
-                modifier = Modifier.size(20.dp))
-            Text("Thêm loại món ăn")
-        }
-        Button(onClick = { navCtrl?.navigate("EditCategory") }) {
-            Image(painter = painterResource(R.drawable.logoimages),
-                contentDescription = null,
-                modifier = Modifier.size(20.dp))
-            Text("Sửa loại món ăn")
-        }
-        Button(onClick = { navCtrl?.navigate("DeleteCategory") }) {
-            Image(painter = painterResource(R.drawable.logoimages),
-                contentDescription = null,
-                modifier = Modifier.size(20.dp))
-            Text("Xoá loại món ăn")
-        }
-
+fun NutBam1(text: String, OnclickItem: () -> Unit) {
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier
+        .fillMaxWidth()
+        .padding(20.dp)
+        .clickable { OnclickItem() }) {
+        Image(
+            painter = painterResource(id = R.drawable.logoimages),
+            contentDescription = null,
+            modifier = Modifier.size(60.dp)
+        )
+        Text(
+            text = text,
+            color = Color.White,
+            fontSize = 17.sp,
+            fontWeight = FontWeight.W700,
+            fontFamily = FontFamily(Font(R.font.cairo_bold)),
+            lineHeight = 22.sp
+        )
     }
 }

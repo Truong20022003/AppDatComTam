@@ -50,7 +50,8 @@ interface UserDao {
 
     @Query("SELECT * FROM User")
     fun getAll(): Flow<List<User>>
-
+    @Query("SELECT * FROM User WHERE tenDangNhap = :tenDangNhap AND matKhau = :matKhau")
+    fun getByUserNamePassword(tenDangNhap: String,matKhau: String ): Flow<User>
     @Query("SELECT * FROM User WHERE id = :id")
     fun getById(id: Int): Flow<User>
 //    @Query("SELECT * FROM User WHERE id = :id")

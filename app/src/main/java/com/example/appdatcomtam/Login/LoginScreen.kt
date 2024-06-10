@@ -1,62 +1,65 @@
 package com.example.appdatcomtam.Login
 
-import androidx.compose.foundation.Image
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
+import android.content.Context
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Button
-import androidx.compose.material3.Checkbox
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextFieldDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import com.example.appdatcomtam.Database.DbHelper
+import com.example.appdatcomtam.Navigation.Screen
 import com.example.appdatcomtam.R
-@Composable
-fun Login(navController: NavController) {
-    preview(navController)
-}
-@Preview(showBackground = true)
-@Composable
-private fun preview(navController: NavController? = null) {
-    LoginScreen(navController)
-}
+import com.example.appdatcomtam.ViewModel.LoginViewModel
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LoginScreen(navController: NavController? = null) {
+fun LoginScreen(navController: NavController? = null, context: Context) {
+    val db = DbHelper.getInstance(context)
+    val userDao = db.userDao()
+
+    // Sử dụng remember để tạo một instance của LoginViewModel
+    val viewModel = remember { LoginViewModel(userDao) }
+
     var username by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var rememberMe by remember { mutableStateOf(false) }
+
+    val isAuthenticated by viewModel.isAuthenticated.observeAsState()
+
+//    LaunchedEffect(isAuthenticated) {
+//        if (isAuthenticated == true) {
+//            navController?.navigate(Screen.MyBottombar.route) {
+//                popUpTo(Screen.Login.route) { inclusive = true }
+//            }
+//        } else if (isAuthenticated == false) {
+//            Log.d("Login", "Login failed")
+//        }
+//    }
+
+    LaunchedEffect(isAuthenticated) {
+        if (isAuthenticated == true) {
+
+            navController?.navigate(Screen.MyBottombar.route)
+        } else if (isAuthenticated == false) {
+            Log.d("aaaaaaa", "loiiiiiiiii")
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -64,7 +67,6 @@ fun LoginScreen(navController: NavController? = null) {
             .padding(16.dp)
             .background(Color.Black),
         horizontalAlignment = Alignment.CenterHorizontally
-
     ) {
         Image(
             painter = painterResource(id = R.drawable.logoimages),
@@ -73,27 +75,22 @@ fun LoginScreen(navController: NavController? = null) {
                 .size(200.dp)
                 .padding(top = 16.dp)
         )
-        Text("Welcome", fontSize = 24.sp, color = Color.White, modifier = Modifier
-                                                    .padding(vertical = 30.dp)
-                                                    )
+        Text("Welcome", fontSize = 24.sp, color = Color.White, modifier = Modifier.padding(vertical = 30.dp))
 
         OutlinedTextField(
             value = username,
             onValueChange = { username = it },
             label = { Text("Tên đăng nhập") },
-
             leadingIcon = { Icon(imageVector = Icons.Default.Person, contentDescription = null) },
             keyboardOptions = KeyboardOptions.Default.copy(
                 imeAction = ImeAction.Next
             ),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-//                color = Color.White, // Màu chữ trong ô nhập liệu
-                focusedBorderColor = Color.White, // Màu viền khi được chọn
-                unfocusedBorderColor = Color.Gray, // Màu viền khi không được chọn
-                cursorColor = Color.White // Màu con trỏ
+                focusedBorderColor = Color.White,
+                unfocusedBorderColor = Color.Gray,
+                cursorColor = Color.White
             ),
-            modifier = Modifier.fillMaxWidth(),
-
+            modifier = Modifier.fillMaxWidth()
         )
 
         OutlinedTextField(
@@ -106,10 +103,9 @@ fun LoginScreen(navController: NavController? = null) {
                 imeAction = ImeAction.Done
             ),
             colors = TextFieldDefaults.outlinedTextFieldColors(
-//                color = Color.White, // Màu chữ trong ô nhập liệu
-                focusedBorderColor = Color.White, // Màu viền khi được chọn
-                unfocusedBorderColor = Color.Gray, // Màu viền khi không được chọn
-                cursorColor = Color.White // Màu con trỏ
+                focusedBorderColor = Color.White,
+                unfocusedBorderColor = Color.Gray,
+                cursorColor = Color.White
             ),
             modifier = Modifier
                 .fillMaxWidth()
@@ -126,13 +122,12 @@ fun LoginScreen(navController: NavController? = null) {
             Checkbox(
                 checked = rememberMe,
                 onCheckedChange = { rememberMe = it }
-
             )
             Text("Nhớ mật khẩu", color = Color.White)
         }
 
         Button(
-            onClick = { /* TODO: Handle login logic */ },
+            onClick = { viewModel.login(username, password) },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp)
@@ -142,10 +137,8 @@ fun LoginScreen(navController: NavController? = null) {
 
         Text(
             "Bạn chưa có tài khoản?",
-             color = Color.White,
-            modifier = Modifier
-                .padding(top = 16.dp)
-//                .clickable(onClick = onRegisterClick)
+            color = Color.White,
+            modifier = Modifier.padding(top = 16.dp)
         )
     }
 }

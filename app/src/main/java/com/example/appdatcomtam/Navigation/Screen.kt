@@ -1,7 +1,7 @@
 package com.example.appdatcomtam.Navigation
 
 enum class Screen(val route: String) {
-    Login("Login"),
+    LoginScreen("LoginScreen"),
     SignUp("SignUp"),
     Home("Home"),
     Category("Favorite"),
@@ -15,4 +15,9 @@ enum class Screen(val route: String) {
     ThemMonAn("ThemMonAn"),
     SuaMonAn("SuaMonAn"),
     DanhSachMonAn("DanhSachMonAn"),
+    QuanLyLoaiMonAnScreen("QuanLyLoaiMonAnScreen"),
+    AddLoaiMonAnScreen("AddLoaiMonAnScreen"),
+    LoaiMonAnListScreen("LoaiMonAnListScreen"),
+    EditLoaiMonAnScreen("EditLoaiMonAnScreen"),
+    DeleteLoaiMonan("DeleteLoaiMonan"),
 }
