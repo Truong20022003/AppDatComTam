@@ -45,10 +45,9 @@ fun RegisterScreen(navController: NavController? = null) {
     var agreeToTerms by remember { mutableStateOf(false) }
 
     Column(
-        modifier = Modifier
-            .fillMaxSize()
+        modifier = Modifier.background(Color(0xFF252121))
             .padding(16.dp)
-            .background(Color.Black),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -73,7 +72,10 @@ fun RegisterScreen(navController: NavController? = null) {
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.White,
                 unfocusedBorderColor = Color.Gray,
-                cursorColor = Color.White
+                cursorColor = Color.White,
+                focusedTextColor = Color.White,
+                disabledTextColor = Color.White,
+                unfocusedTextColor = Color.White
             ),
             modifier = Modifier.fillMaxWidth(),
         )
@@ -90,7 +92,10 @@ fun RegisterScreen(navController: NavController? = null) {
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.White,
                 unfocusedBorderColor = Color.Gray,
-                cursorColor = Color.White
+                cursorColor = Color.White,
+                focusedTextColor = Color.White,
+                disabledTextColor = Color.White,
+                unfocusedTextColor = Color.White
             ),
             modifier = Modifier
                 .fillMaxWidth()
@@ -109,7 +114,10 @@ fun RegisterScreen(navController: NavController? = null) {
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.White,
                 unfocusedBorderColor = Color.Gray,
-                cursorColor = Color.White
+                cursorColor = Color.White,
+                focusedTextColor = Color.White,
+                disabledTextColor = Color.White,
+                unfocusedTextColor = Color.White
             ),
             modifier = Modifier
                 .fillMaxWidth()

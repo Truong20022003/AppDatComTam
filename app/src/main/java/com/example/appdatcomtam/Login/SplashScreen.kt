@@ -20,9 +20,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-
                 WelcomeScreen(onContinueClicked = {  })
-
         }
     }
 }
@@ -41,7 +39,6 @@ fun WelcomeScreen(onContinueClicked: () -> Unit) {
                 modifier = Modifier.size(200.dp)
             )
             Spacer(modifier = Modifier.height(16.dp))
-
         }
     }
 }

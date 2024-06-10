@@ -5,14 +5,30 @@ import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -63,9 +79,9 @@ fun LoginScreen(navController: NavController? = null, context: Context) {
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .background(Color(0xFF252121))
             .padding(16.dp)
-            .background(Color.Black),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Image(
@@ -75,7 +91,12 @@ fun LoginScreen(navController: NavController? = null, context: Context) {
                 .size(200.dp)
                 .padding(top = 16.dp)
         )
-        Text("Welcome", fontSize = 24.sp, color = Color.White, modifier = Modifier.padding(vertical = 30.dp))
+        Text(
+            "Welcome",
+            fontSize = 24.sp,
+            color = Color.White,
+            modifier = Modifier.padding(vertical = 30.dp)
+        )
 
         OutlinedTextField(
             value = username,
@@ -88,7 +109,10 @@ fun LoginScreen(navController: NavController? = null, context: Context) {
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.White,
                 unfocusedBorderColor = Color.Gray,
-                cursorColor = Color.White
+                cursorColor = Color.White,
+                focusedTextColor = Color.White,
+                disabledTextColor = Color.White,
+                unfocusedTextColor = Color.White
             ),
             modifier = Modifier.fillMaxWidth()
         )
@@ -105,7 +129,10 @@ fun LoginScreen(navController: NavController? = null, context: Context) {
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.White,
                 unfocusedBorderColor = Color.Gray,
-                cursorColor = Color.White
+                cursorColor = Color.White,
+                focusedTextColor = Color.White,
+                disabledTextColor = Color.White,
+                unfocusedTextColor = Color.White
             ),
             modifier = Modifier
                 .fillMaxWidth()

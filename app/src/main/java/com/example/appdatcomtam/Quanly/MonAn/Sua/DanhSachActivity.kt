@@ -1,4 +1,4 @@
-package com.example.appdatcomtam.Quanly.Sua
+package com.example.appdatcomtam.Quanly.MonAn.Sua
 
 import android.net.Uri
 import androidx.compose.foundation.Image
@@ -193,7 +193,7 @@ fun ItemDanhSachMonAn(
                 )
             }
             Text(
-                text = gia.toString(),
+                text = "${gia.toInt()}K",
                 textAlign = TextAlign.Start,
                 fontSize = 16.sp,
                 color = Color(0xFFFE724C),

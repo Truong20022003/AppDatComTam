@@ -1,6 +1,5 @@
 package com.example.appdatcomtam.Category
 
-import android.net.Uri
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,15 +16,20 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,9 +38,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -48,13 +56,75 @@ import com.example.appdatcomtam.ViewModel.LoaiMonAnViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun EditLoaiMonAnScreen(viewModel: LoaiMonAnViewModel, navController: NavController) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        IconButton(onClick = {
+                            navController.popBackStack()
+                        }) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.back),
+                                modifier = Modifier.size(20.dp),
+                                tint = Color.White,
+                                contentDescription = "back"
+                            )
+                        }
+                        Image(
+                            painter = painterResource(id = R.drawable.logoimages),
+                            modifier = Modifier
+                                .size(60.dp)
+                                .padding(start = 8.dp),
+                            contentDescription = "logo"
+                        )
+                        Text(
+                            "Sửa loại món ăn",
+                            textAlign = TextAlign.Start,
+                            fontSize = 18.sp,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(start = 8.dp),
+                            color = Color.White,
+                            fontFamily = FontFamily(Font(R.font.cairo_bold))
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = Color(0xFF252121)
+                ),
+                modifier = Modifier.shadow(
+                    10.dp,
+                    RoundedCornerShape(10.dp),
+                    spotColor = Color.Black
+                ),
+            )
+        },
+        content = { innerPadding ->
+            Column(
+                modifier = Modifier
+                    .background(Color(0xFF252121))
+                    .fillMaxSize()
+                    .padding(innerPadding)
+            ) {
+                showEditLoaiMonAn(viewModel, navController)
+            }
+        }
+    )
 
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun showEditLoaiMonAn(viewModel: LoaiMonAnViewModel, navController: NavController) {
     val showUpdateDialog = remember { mutableStateOf(false) }
     val emty by remember { mutableStateOf("") }
     var inputTenloai by remember { mutableStateOf("") }
     var inputidLoai by remember { mutableStateOf(0) }
     val loaiMons by viewModel.loaiMonAns.collectAsState(initial = emptyList())
-
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,31 +134,6 @@ fun EditLoaiMonAnScreen(viewModel: LoaiMonAnViewModel, navController: NavControl
 //        (navController){
 //            navController.popBackStack()
 //        }
-
-        Row (
-            modifier = Modifier
-                .padding(start = 24.dp, top = 10.dp)
-                .fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ){
-            Text(
-                text = "Id",
-                fontSize = 20.sp,
-                modifier = Modifier.padding(5.dp),
-                color = Color.White,
-                fontWeight = FontWeight.Bold
-            )
-            Text(
-                text = "Name",
-                fontSize = 20.sp,
-                modifier = Modifier.padding(5.dp),
-                fontWeight = FontWeight.Bold,
-                color = Color.White
-            )
-            Spacer(modifier = Modifier.width(40.dp))
-        }
-
         LazyColumn(
             modifier = Modifier
                 .padding(top = 15.dp)
@@ -96,7 +141,6 @@ fun EditLoaiMonAnScreen(viewModel: LoaiMonAnViewModel, navController: NavControl
             contentPadding = PaddingValues(10.dp)
         ) {
             items(loaiMons) {
-
                 Card(
                     onClick = {
 
@@ -104,9 +148,9 @@ fun EditLoaiMonAnScreen(viewModel: LoaiMonAnViewModel, navController: NavControl
                     },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(0.dp,6.dp),
+                        .padding(0.dp, 6.dp),
                     elevation = CardDefaults.cardElevation(4.dp),
-                    colors = CardDefaults.cardColors(Color.DarkGray)
+                    colors = CardDefaults.cardColors(Color(0xFF2F2D2D))
 
                 ) {
                     Row(
@@ -128,7 +172,8 @@ fun EditLoaiMonAnScreen(viewModel: LoaiMonAnViewModel, navController: NavControl
                             modifier = Modifier.padding(5.dp),
                             color = Color.White
                         )
-                        Image(painter = painterResource(id = R.drawable.editimages), contentDescription = "",
+                        Image(painter = painterResource(id = R.drawable.editimages),
+                            contentDescription = "",
                             modifier = Modifier
                                 .size(20.dp)
                                 .clickable {
@@ -142,36 +187,47 @@ fun EditLoaiMonAnScreen(viewModel: LoaiMonAnViewModel, navController: NavControl
                 if (showUpdateDialog.value) {
                     AlertDialog(
                         onDismissRequest = { showUpdateDialog.value = false },
-                        dismissButton = {
-                            Button(
-                                onClick = {
-                                    showUpdateDialog.value = false
-
-
-                                }
-                            ) {
-                                Text(text = "Cancel")
-                            }
-                        },
                         confirmButton = {
-
-                            Button(
-                                onClick = {
-                                    val newStudent = LoaiMonAn(inputidLoai!!.toInt(),inputTenloai)
-                                    viewModel.updateLoaiMonAn(newStudent)
-//                                    navController.popBackStack()
-                                    showUpdateDialog.value = false
-                                    inputTenloai = emty
-
-                                }
+                            Row(
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
-                                Text(text = "Update")
+                                Button(
+                                    onClick = {
+                                        showUpdateDialog.value = false
+                                    }
+                                    ,modifier = Modifier
+                                        .weight(1f)
+                                        .padding(top = 50.dp)
+                                        .height(40.dp),
+                                    colors = ButtonDefaults.buttonColors(Color(0xFFFFB703)),
+                                    shape = RoundedCornerShape(10.dp)
+                                ) {
+                                    Text(text = "Hủy")
+                                }
+                                Spacer(modifier = Modifier.width(20.dp))
+                                Button(
+                                    onClick = {
+                                        val newStudent = LoaiMonAn(inputidLoai!!.toInt(), inputTenloai)
+                                        viewModel.updateLoaiMonAn(newStudent)
+//                                    navController.popBackStack()
+                                        showUpdateDialog.value = false
+                                        inputTenloai = emty
+                                    },
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(top = 50.dp)
+                                        .height(40.dp),
+                                    colors = ButtonDefaults.buttonColors(Color(0xFFFFB703)),
+                                    shape = RoundedCornerShape(10.dp)
+                                ) {
+                                    Text(text = "Cập nhật")
+                                }
                             }
-
                         },
                         title = {
                             Text(
-                                text = "Update Loai mon an",
+                                text = "Sửa loại món ăn",
                                 fontWeight = FontWeight.Bold,
                                 fontSize = 25.sp,
                                 modifier = Modifier.padding(5.dp)
@@ -182,11 +238,11 @@ fun EditLoaiMonAnScreen(viewModel: LoaiMonAnViewModel, navController: NavControl
                                 inputTenloai?.let { it1 ->
                                     OutlinedTextField(
                                         value = it1,
-                                        onValueChange = {inputTenloai = it},
+                                        onValueChange = { inputTenloai = it },
                                         label = {
                                             Text(text = "Tên loai mon an")
                                         },
-                                        placeholder = { Text(text = "Nhập tên loai mon an")}
+                                        placeholder = { Text(text = "Nhập tên loai mon an") }
                                     )
                                 }
                             }
