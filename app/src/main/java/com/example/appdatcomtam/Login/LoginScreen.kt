@@ -9,13 +9,17 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -74,6 +78,7 @@ fun LoginScreen(navController: NavController? = null, context: Context) {
             navController?.navigate(Screen.MyBottombar.route)
         } else if (isAuthenticated == false) {
             Log.d("aaaaaaa", "loiiiiiiiii")
+            Toa
         }
     }
 
@@ -112,7 +117,8 @@ fun LoginScreen(navController: NavController? = null, context: Context) {
                 cursorColor = Color.White,
                 focusedTextColor = Color.White,
                 disabledTextColor = Color.White,
-                unfocusedTextColor = Color.White
+                unfocusedTextColor = Color.White,
+                focusedSupportingTextColor = Color.White
             ),
             modifier = Modifier.fillMaxWidth()
         )
@@ -132,7 +138,8 @@ fun LoginScreen(navController: NavController? = null, context: Context) {
                 cursorColor = Color.White,
                 focusedTextColor = Color.White,
                 disabledTextColor = Color.White,
-                unfocusedTextColor = Color.White
+                unfocusedTextColor = Color.White,
+                focusedSupportingTextColor = Color.White
             ),
             modifier = Modifier
                 .fillMaxWidth()
@@ -156,8 +163,12 @@ fun LoginScreen(navController: NavController? = null, context: Context) {
         Button(
             onClick = { viewModel.login(username, password) },
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
+                .align(Alignment.CenterHorizontally)
+                .width(200.dp)
+                .padding(top = 50.dp)
+                .height(40.dp),
+            colors = ButtonDefaults.buttonColors(Color(0xFFFFB703)),
+            shape = RoundedCornerShape(10.dp),
         ) {
             Text("Đăng nhập")
         }

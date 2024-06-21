@@ -53,6 +53,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
+import com.example.appdatcomtam.Model.LoaiMonAn
 import com.example.appdatcomtam.Quanly.MonAn.copyUriToInternalStorage
 import com.example.appdatcomtam.R
 
@@ -72,6 +73,7 @@ fun ThemMonAnScreen(viewModel: ThemMonAnViewModel, navController: NavController)
                             viewModel.imageUri = null
                             viewModel.gia = ""
                             viewModel.tenMonAn = ""
+                            viewModel.selectedOptionText = "Món chính"
                         }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.back),
@@ -161,22 +163,18 @@ fun showThemMonAnScreen(viewModel: ThemMonAnViewModel, navController: NavControl
                 .clip(RoundedCornerShape(10.dp))
                 .clickable { imagePickerLauncher.launch("image/*") }
         )
-//        ComboBoxExample(
-//            text = "Loại món",
-//            onOptionSelected = { loaiMonAn ->
-//                viewModel.selectedOptionText = loaiMonAn.tenLoaiMonAn!!
-//                viewModel.idloai = loaiMonAn.id
-//            },
-//            viewModel = viewModel // Truyền viewModel vào
-//        )
+
         ComboBoxExample(
             text = "Loại món",
             onOptionSelected = { selectedOption ->
-                viewModel.selectedOptionText = selectedOption.tenLoaiMonAn
+                viewModel.selectedOptionText = selectedOption.tenLoaiMonAn!!
                 viewModel.idloai = selectedOption.id.toString()
             },
-            viewModel = viewModel // Truyền viewModel vào
+            viewModel = viewModel,
+            defaultOption = viewModel.loaiMonAns.value.firstOrNull()
         )
+
+
         Column(
             modifier = Modifier
                 .fillMaxWidth(),
@@ -251,37 +249,27 @@ fun showThemMonAnScreen(viewModel: ThemMonAnViewModel, navController: NavControl
     }
 }
 
-data class LoaiMonAn(val id : Int, val tenLoaiMonAn: String)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ComboBoxExample(
     text: String,
     onOptionSelected: (LoaiMonAn) -> Unit,
-    viewModel: ThemMonAnViewModel
+    viewModel: ThemMonAnViewModel,
+    defaultOption: LoaiMonAn? = null
 ) {
     var expanded by remember { mutableStateOf(false) }
-    val options = listOf(
-        LoaiMonAn(1, "Món chính"),
-        LoaiMonAn(2, "Món phụ"),
-        LoaiMonAn(3, "Món tráng miệng"),
-    )
+    val loaiMons by viewModel.loaiMonAns.collectAsState()
 
-    // Thiết lập giá trị mặc định nếu chưa có giá trị nào được chọn
-    if (viewModel.selectedOptionText.isEmpty()) {
-        val defaultOption = options.first()
-        viewModel.selectedOptionText = defaultOption.tenLoaiMonAn
-        viewModel.idloai = defaultOption.id.toString()
+    var selectedText by remember {
+        mutableStateOf(defaultOption?.tenLoaiMonAn ?: viewModel.selectedOptionText)
     }
-
-    var selectedText by remember { mutableStateOf(viewModel.selectedOptionText) }
 
     Column {
         Text(
             text = text,
             textAlign = TextAlign.Start,
             fontSize = 18.sp,
-            modifier = Modifier
-                .padding(start = 8.dp),
+            modifier = Modifier.padding(start = 8.dp),
             color = Color.White,
             fontFamily = FontFamily(Font(R.font.cairo_bold))
         )
@@ -314,94 +302,21 @@ fun ComboBoxExample(
                 expanded = expanded,
                 onDismissRequest = { expanded = false }
             ) {
-                options.forEach { selectionOption ->
-                    DropdownMenuItem(
-                        onClick = {
-                            selectedText = selectionOption.tenLoaiMonAn
-                            viewModel.selectedOptionText = selectionOption.tenLoaiMonAn
-                            viewModel.idloai = selectionOption.id.toString()
-                            onOptionSelected(selectionOption)
-                            expanded = false
-                        },
-                        text = { Text(selectionOption.tenLoaiMonAn) }
-                    )
+                if (loaiMons.isNotEmpty()) {
+                    loaiMons.forEach { selectionOption ->
+                        DropdownMenuItem(
+                            onClick = {
+                                selectedText = selectionOption.tenLoaiMonAn!!
+                                viewModel.selectedOptionText = selectionOption.tenLoaiMonAn!!
+                                viewModel.idloai = selectionOption.id.toString()
+                                onOptionSelected(selectionOption)
+                                expanded = false
+                            },
+                            text = { Text(selectionOption.tenLoaiMonAn!!) }
+                        )
+                    }
                 }
             }
         }
     }
 }
-
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun ComboBoxExample(
-//    text: String,
-//    onOptionSelected: (LoaiMonAn) -> Unit,
-//    viewModel: ThemMonAnViewModel
-//) {
-//    val loaiMons by viewModel.loaiMonAns.collectAsState(initial = emptyList())
-//    var expanded by remember { mutableStateOf(false) }
-//
-//    // Thiết lập giá trị mặc định nếu chưa có giá trị nào được chọn
-//    if (viewModel.selectedOptionText.isEmpty() && loaiMons.isNotEmpty()) {
-//        val defaultOption = loaiMons.first()
-//        viewModel.selectedOptionText = defaultOption.tenLoaiMonAn!!
-//        viewModel.idloai = defaultOption.id
-//    }
-//
-//    var selectedText by remember { mutableStateOf(viewModel.selectedOptionText) }
-//
-//    Column {
-//        Text(
-//            text = text,
-//            textAlign = TextAlign.Start,
-//            fontSize = 18.sp,
-//            modifier = Modifier
-//                .padding(start = 8.dp),
-//            color = Color.White,
-//            fontFamily = FontFamily(Font(R.font.cairo_bold))
-//        )
-//        ExposedDropdownMenuBox(
-//            expanded = expanded,
-//            onExpandedChange = {
-//                expanded = !expanded
-//            }
-//        ) {
-//            OutlinedTextField(
-//                value = selectedText,
-//                onValueChange = { /* Do nothing */ },
-//                trailingIcon = {
-//                    ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
-//                },
-//                readOnly = true,
-//                modifier = Modifier
-//                    .menuAnchor()
-//                    .fillMaxWidth()
-//                    .background(Color.White, shape = RoundedCornerShape(10.dp))
-//                    .clickable { expanded = true },
-//                colors = TextFieldDefaults.outlinedTextFieldColors(
-//                    containerColor = Color.White,
-//                    focusedBorderColor = Color.Transparent,
-//                    unfocusedBorderColor = Color.Transparent
-//                ),
-//                shape = RoundedCornerShape(10.dp)
-//            )
-//            ExposedDropdownMenu(
-//                expanded = expanded,
-//                onDismissRequest = { expanded = false }
-//            ) {
-//                loaiMons.forEachIndexed { index, selectionOption ->
-//                    DropdownMenuItem(
-//                        onClick = {
-//                            selectedText = selectionOption.tenLoaiMonAn!!
-//                            viewModel.selectedOptionText = selectionOption.tenLoaiMonAn!!
-//                            viewModel.idloai = selectionOption.id
-//                            onOptionSelected(selectionOption)
-//                            expanded = false
-//                        },
-//                        text = { Text(selectionOption.tenLoaiMonAn!!) }
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
